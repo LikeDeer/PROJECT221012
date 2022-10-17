@@ -8,4 +8,12 @@ public class Word {
         this.eng = eng;
         this.kor = kor;
     }
+
+    public String getEng() {
+        return eng;
+    }
+
+    public String getKor() {
+        return kor;
+    }
 }

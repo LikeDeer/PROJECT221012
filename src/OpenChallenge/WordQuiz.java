@@ -5,33 +5,63 @@ import java.util.Vector;
 
 public class WordQuiz {
     public static void main(String[] args) {
+        // 단어 리스트 생성
         Vector<Word> wordVector = new Vector<Word>();
         fillingVector(wordVector);
 
         System.out.println("\"명품영어\"의 단어 테스트를 시작합니다. -1을 입력하면 종료합니다.");
-        int size = wordVector.size();
-        System.out.println("현재 " + size + "개의 단어가 들어 있습니다.");
+        int vSize = wordVector.size();
+        System.out.println("현재 " + vSize + "개의 단어가 들어 있습니다.");
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
             // 문제 단어 고르기
-            int randomProblem = (int)Math.random() % size;  // 0 ~ 19
+            // System.out.println("DEBUG >> 문제 단어 고르기");
+            int randomProblem = (int)(Math.random() * vSize);  // randomProblem: Vector 내 정답 단어 인덱스(0 ~ 19)
+            // System.out.println("DEBUG >> randomProblem = " + randomProblem);
 
-            // 문제와 랜덤 단어들 선택지 번호 매핑
-            int otherWords = 1;
-            break;
+            // 문제와 랜덤 단어들 선택지 번호 매기기
+            // System.out.println("DEBUG >> 문제와 랜덤 단어들 선택지 번호 매기기");
+            int[] choices = new int[4];                      // choices[0~3]: 정답을 포함한 문제 인덱스 정수 배열
+            int wheresAnswer = (int)(Math.random() * 4);       // wheresAnswer: choices 의 정답 위치(0 ~ 3)
+            // System.out.println("DEBUG >> wheresAnswer = " + wheresAnswer);
+            choices[wheresAnswer] = randomProblem;
+            for (int i = 0; i < 4; i++) {
+                if (i == wheresAnswer) continue;        // 이미 정답으로 선점된 곳이라면 패스
+                int otherProblem;           // otherProblem: (지역) 다른 단어 인덱스
+                do {
+                    otherProblem = (int)(Math.random() * vSize);
+                    // System.out.println("DEBUG >> otherProblem = " + otherProblem);
+                } while (otherProblem == randomProblem);
+                choices[i] = otherProblem;                  // choices 에 다른 단어들 인덱스로 채움.
+            }
 
-            // 문제 제시
-
+            // 문제 출력
+            // System.out.println("DEBUG >> 문제 출력");
+            System.out.println(wordVector.get(randomProblem).getEng() + "?");
+            for (int i = 0; i < 4; i++) {
+                System.out.print("(" + (i + 1) + ")" + wordVector.get(choices[i]).getKor() + " ");
+            }
+            System.out.print(":>");
 
             // 입력부
-
+            // System.out.println("DEBUG >> 입력부");
+            int input = scanner.nextInt();
 
             // exit 확인
-
+            // System.out.println("DEBUG >> exit 확인");
+            if (input == -1) {
+                System.out.println("\"명품영어\"를 종료합니다...");
+                break;      // 프로그램 종료
+            }
 
             // 정답 확인
-
+            // System.out.println("DEBUG >> 정답 확인");
+            if (wheresAnswer == input - 1) {                // input 과 wheresAnswer 비교
+                System.out.println("Excellent !!");
+            } else {
+                System.out.println("No. !!");
+            }
         }
 
         scanner.close();
